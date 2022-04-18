@@ -58,45 +58,8 @@ Graph<Key, Value, Weight> read_graph(const char *file_name) {
     return gr;
 }
 
-////--------------------------------|my personal hell -- recursive dijkstra|----------------------------
-//std::pair<weight_t, route_t> recursive_dijkstra(
-//        Graph<node_name_t, std::pair<bool, weight_t>, weight_t> &clone,\
-//        route_t& act_root,\
-//        route_t& answer,\
-//       const  node_name_t& aim,\
-//       const  node_name_t& key_from,\
-//       weight_t& root_wight,\
-//       weight_t& root_wight_to_answer\
-//        ) {
-//
-//    if(clone[key_from].first == true){return {root_wight_to_answer, answer};}
-//    else clone[key_from].first = true;
-//
-//    act_root.push_back(key_from);
-//
-//    // if new node is searched one
-//    if (key_from == aim) {
-//        if (root_wight <  root_wight_to_answer){
-//            root_wight_to_answer = root_wight;
-//            answer = act_root;
-//        }
-//    }
-//
-//    // for each node change value
-//    for (auto&[edge_go_to_key, edge_w]: clone.get_con_nodes(key_from) ) {
-//        if ( root_wight + edge_w < clone[edge_go_to_key].second) clone[edge_go_to_key].second = root_wight + edge_w;
-//    }
-//
-//    // for each node do the same step
-//    for (auto&[edge_go_to_key, edge_w]: clone.get_con_nodes(key_from)) {
-//        auto w = root_wight + edge_w;
-//        recursive_dijkstra(clone, act_root, answer, aim, edge_go_to_key, w, root_wight_to_answer);
-//    }
-//
-//    return  {root_wight_to_answer, answer};
-//}
 
-////--------------------------------|dijkstra|----------------------------
+////--------------------------------|const dijkstra|----------------------------
 std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &key_from, const node_name_t &key_to) {
 
     //check if there are negative edges
@@ -108,6 +71,13 @@ std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &k
  + " can't be applied.");
         }
     }
+    if (graph.find(key_from) == graph.end()){throw std::runtime_error("\n There is no such a node: " \
+    + to_string(key_from)  + ", change key_from parameter." );}
+
+    if (graph.find(key_to) == graph.end()){throw std::runtime_error("\n There is no such a node: " \
+    + to_string(key_to)  + ", change key_to parameter." );}
+
+
 //  the one we will change throw algo
     Graph<node_name_t, std::pair<weight_t, route_t>, weight_t> clone;
 
@@ -125,62 +95,54 @@ std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &k
 
 //  create list to find the smallest wight
     list<std::pair<node_name_t, weight_t> > non_vis;
-
     for (auto[node_key, node]: clone) {
         non_vis.push_back({node_key, node.value().first});
     }
 
+//    for every node
     node_name_t processed_key;
     for (size_t i = 0; i < clone.size(); ++i) {
+//        sorting each time will give us the smallest number
         non_vis.sort([](const std::pair<node_name_t, weight_t>& x, const std::pair<node_name_t, weight_t>& y) {
             return (x.second) < (y.second);
         });
-
-//        for (auto it : non_vis) std::cout  << (it).first << " "<< (it).second << " | ";
-
+//  delete from non_vis list
         processed_key = non_vis.front().first;
         non_vis.pop_front();
 
-//        std::cout <<  " processed_key: " << processed_key  << "--"<<std::endl;
+        // if that node wasn't neighbour before it won't be in future
+        if( is_equal( clone[processed_key].first, inf) ){continue;}
 
+// for each nebear node recalculate smallest way to
         for (auto&[key_node_to, w_edge]: clone.get_con_nodes(processed_key)) {
 
             if (is_not_in(non_vis, key_node_to) ) { continue; }//if was visited
 
-            std::cout<< key_node_to  <<std::endl;
+            if (clone[key_node_to].first > clone[processed_key].first + w_edge) { // if closer way was found
 
-//            if ((i == 3)&&(processed_key == 4)){
-//                volatile int a =3;
-//                std::cout << " ! ";
-//            }
-
-            if (clone[key_node_to].first > clone[processed_key].first + w_edge) {
-
+                //  rewrite new distance to non_vis list
                 non_vis.remove({key_node_to,clone[key_node_to].first});
                 non_vis.push_front({key_node_to,clone[processed_key].first + w_edge});
 
+                //  rewrite new distance and root to node
                 clone[key_node_to].first = clone[processed_key].first + w_edge;
                 clone[key_node_to].second =  clone[processed_key].second;
                 (clone[key_node_to].second).push_back(key_node_to);
-
-
             }
 
         }
 
     }
 
-//print(clone);
-//    for (auto&[key, w]: clone) {
-//        std::cout << clone[key].first << std::endl;
-//    }
+//    in a case there were no way between
+    if ( is_equal( clone[key_to].first, inf) ){
+//        throw std::runtime_error("\n There is no way between: " + to_string(key_from)  + " and "  + to_string(key_to));
+        std::cout << "\nThere is no way between: " + to_string(key_from)  + " and "  + to_string(key_to) << ". Be careful!"<<std::endl;
+        return {-1,route_t()};
+        }
+
     return clone[key_to];
 }
 
-
-
-// check if there are negative edges +
-// take out values of nodes + put in negative values in nodes (marked as non-visited)
-//
 
 #endif //GRAPH_ALGORITHM_GRAPH_ALGORITMS_HPP
