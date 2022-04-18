@@ -8,11 +8,37 @@
 #include "Fileswork.cpp"
 #include "Graph_Algoritms.h"
 #include <limits>
+#include <list>
+
+template<typename Key ,
+        typename Value ,
+        typename Weight >
+void print(const Graph<Key ,Value ,Weight> &graph) {
+    if (graph.empty()) {
+        std::cout << "> This graph is empty!" << std::endl;
+        return;
+    }
+    std::cout << "> Size of graph: " << graph.size() << std::endl;
+    for (const auto&[key, node]: graph) {
+        std::cout << '[' << key << "] stores: " << //double( graph[key] ) <<
+                  " and matches with:" << std::endl;
+        for (const auto&[key, weight]: node)
+            std::cout << "\t[" << key << "]\t with weight: "
+                      << weight << std::endl;
+    }
+}
 
 const int inf = std::numeric_limits<double>::infinity();
 
 bool is_equal(double x, double y) {
     return std::fabs(x - y) < std::numeric_limits<double>::epsilon();
+}
+
+bool is_not_in(list<std::pair<node_name_t, weight_t> > list,node_name_t key ){
+    for (auto& it: list) {
+        if (it.first == key) return false;
+    }
+    return true;
 }
 
 template<typename Key, typename Value, typename Weight>
@@ -82,19 +108,66 @@ std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &k
  + " can't be applied.");
         }
     }
+//  the one we will change throw algo
+    Graph<node_name_t, std::pair<weight_t, route_t>, weight_t> clone;
 
-    Graph <node_name_t,  weight_t, weight_t> clone (graph); // the one we will change throw algo
-
+//  set up values and weights
     for (auto&[node_key, node]: graph) {
-        node.value() = inf;
+        clone.insert_node(node_key, {inf, route_t()});
+    }
+    clone[key_from].first = 0;
+    clone[key_from].second.push_back(key_from);
+    for (auto&[node_key, node]: graph) {
+        for (auto&[key_node_to, edge]: node) {
+            clone.insert_edge({node_key, key_node_to}, edge);
+        }
     }
 
-    route_t answer, act_root;
-    double a_1 = 0;
-    double a_2 = inf;
+//  create list to find the smallest wight
+    list<std::pair<node_name_t, weight_t> > non_vis;
 
+    for (auto[node_key, node]: clone) {
+        non_vis.push_back({node_key, node.value().first});
+    }
 
-//    return recursive_dijkstra(clone, act_root, answer, key_to , key_from, a_1, a_2);
+    node_name_t processed_key;
+    for (size_t i = 0; i < clone.size(); ++i) {
+        non_vis.sort([](std::pair<node_name_t, weight_t> x, std::pair<node_name_t, weight_t> y) {
+            return x.second < y.second;
+        });
+        for (auto it : non_vis) std::cout  << (it).first << " ";
+
+        processed_key = non_vis.front().first;
+        non_vis.pop_front();
+
+        std::cout <<  " processed_key: " << processed_key  << "--"<<std::endl;
+
+        for (auto&[key_node_to, w_edge]: clone.get_con_nodes(processed_key)) {
+
+            if (is_not_in(non_vis, key_node_to) ) { continue; }//if was visited
+
+            std::cout<< key_node_to  <<std::endl;
+//            std::cout << clone[key_node_to].first << " " << clone[processed_key].first << " " << w_edge;
+            if ((i == 3)&&(processed_key == 4)){
+                volatile int a =3;
+                std::cout << " ! ";
+            }
+
+            if (clone[key_node_to].first > clone[processed_key].first + w_edge) {
+                clone[key_node_to].first = clone[processed_key].first + w_edge;
+                clone[key_node_to].second =  clone[processed_key].second;
+                (clone[key_node_to].second).push_back(key_node_to);
+            }
+
+        }
+
+    }
+
+//print(clone);
+//    for (auto&[key, w]: clone) {
+//        std::cout << clone[key].first << std::endl;
+//    }
+    return clone[key_to];
 }
 
 
