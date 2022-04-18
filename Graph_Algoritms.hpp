@@ -132,31 +132,38 @@ std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &k
 
     node_name_t processed_key;
     for (size_t i = 0; i < clone.size(); ++i) {
-        non_vis.sort([](std::pair<node_name_t, weight_t> x, std::pair<node_name_t, weight_t> y) {
-            return x.second < y.second;
+        non_vis.sort([](const std::pair<node_name_t, weight_t>& x, const std::pair<node_name_t, weight_t>& y) {
+            return (x.second) < (y.second);
         });
-        for (auto it : non_vis) std::cout  << (it).first << " ";
+
+//        for (auto it : non_vis) std::cout  << (it).first << " "<< (it).second << " | ";
 
         processed_key = non_vis.front().first;
         non_vis.pop_front();
 
-        std::cout <<  " processed_key: " << processed_key  << "--"<<std::endl;
+//        std::cout <<  " processed_key: " << processed_key  << "--"<<std::endl;
 
         for (auto&[key_node_to, w_edge]: clone.get_con_nodes(processed_key)) {
 
             if (is_not_in(non_vis, key_node_to) ) { continue; }//if was visited
 
             std::cout<< key_node_to  <<std::endl;
-//            std::cout << clone[key_node_to].first << " " << clone[processed_key].first << " " << w_edge;
-            if ((i == 3)&&(processed_key == 4)){
-                volatile int a =3;
-                std::cout << " ! ";
-            }
+
+//            if ((i == 3)&&(processed_key == 4)){
+//                volatile int a =3;
+//                std::cout << " ! ";
+//            }
 
             if (clone[key_node_to].first > clone[processed_key].first + w_edge) {
+
+                non_vis.remove({key_node_to,clone[key_node_to].first});
+                non_vis.push_front({key_node_to,clone[processed_key].first + w_edge});
+
                 clone[key_node_to].first = clone[processed_key].first + w_edge;
                 clone[key_node_to].second =  clone[processed_key].second;
                 (clone[key_node_to].second).push_back(key_node_to);
+
+
             }
 
         }
