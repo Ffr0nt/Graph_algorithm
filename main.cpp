@@ -107,10 +107,23 @@ void new_test_3(){
     gr_1.insert_edge({4,1}, 32);
     gr_1.insert_edge({4,3}, 4);
     gr_1.insert_edge({4,3}, 4);
-//    print(gr_1);
 
 
-    auto answ = dijkstra(gr_1,2, {1,2,3,5});
+//    auto answ = dijkstra(gr_1,2, {1,2,3,5});
+//    for (auto it : answ){
+//        std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
+//        for (auto it_2 : it.second) std::cout  << (it_2) << " ";
+//        std::cout << std::endl;
+//    }
+
+    auto an = dijkstra(gr_1,2);
+    for (auto it : an){
+        std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
+        for (auto it_2 : it.second) std::cout  << (it_2) << " ";
+        std::cout << std::endl;
+    }
+
+    auto answ = dijkstra(gr_1,2,{1,2,5});
     for (auto it : answ){
         std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
         for (auto it_2 : it.second) std::cout  << (it_2) << " ";
