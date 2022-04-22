@@ -145,4 +145,5 @@ std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &k
 }
 
 
+
 #endif //GRAPH_ALGORITHM_GRAPH_ALGORITMS_HPP

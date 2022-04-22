@@ -63,33 +63,26 @@ void new_test_2(){
 //    gr_1.insert_edge({1,4}, 14.6);
 //    gr_1.insert_edge({4,3}, 4.6);
 
-//    Graph<int, double, double> gr_1;
-//    gr_1.insert_node(1,1);
-//    gr_1.insert_node(2,2);
-//    gr_1.insert_node(3,3);
-//    gr_1.insert_node(4,4);
-//    gr_1.insert_edge({1,2}, 12);
-//    gr_1.insert_edge({1,3}, 12);
-//    gr_1.insert_edge({1,4}, 14);
-//    gr_1.insert_edge({2,1}, 32);
-//    gr_1.insert_edge({2,3}, 4);
-//    gr_1.insert_edge({2,4}, 4);
-//    gr_1.insert_edge({3,1}, 32);
-//    gr_1.insert_edge({3,2}, 4);
-//    gr_1.insert_edge({3,4}, 4);
-//    gr_1.insert_edge({4,1}, 32);
-//    gr_1.insert_edge({4,3}, 4);
-//    gr_1.insert_edge({4,3}, 4);
+    Graph<int, double, double> gr_1;
+    gr_1.insert_node(1,1);
+    gr_1.insert_node(2,2);
+    gr_1.insert_node(3,3);
+    gr_1.insert_node(4,4);
+    gr_1.insert_edge({1,2}, 12);
+    gr_1.insert_edge({1,3}, 12);
+    gr_1.insert_edge({1,4}, 14);
+    gr_1.insert_edge({2,1}, 32);
+    gr_1.insert_edge({2,3}, 4);
+    gr_1.insert_edge({2,4}, 4);
+    gr_1.insert_edge({3,1}, 32);
+    gr_1.insert_edge({3,2}, 4);
+    gr_1.insert_edge({3,4}, 4);
+    gr_1.insert_edge({4,1}, 32);
+    gr_1.insert_edge({4,3}, 4);
+    gr_1.insert_edge({4,3}, 4);
 //    print(gr_1);
 
-    Graph<int, char, double> gr_1;
-    gr_1.insert_node('A', 1);
-    gr_1.insert_node('B', 2);
-    //    gr_1.insert_edge({4,1}, 32);
-
-
-
-    auto answ = dijkstra(gr_1, 'A','B');
+    auto answ = dijkstra(gr_1, 1,3);
     std::cout << "distance: "<< answ.first<< std::endl << "Root: ";
     for (auto it : answ.second) std::cout  << (it) << " ";
 }
