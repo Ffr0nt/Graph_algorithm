@@ -87,7 +87,38 @@ void new_test_2(){
     for (auto it : answ.second) std::cout  << (it) << " ";
 }
 
+void new_test_3(){
+
+    Graph<int, double, double> gr_1;
+    gr_1.insert_node(1,1);
+    gr_1.insert_node(2,2);
+    gr_1.insert_node(3,3);
+    gr_1.insert_node(4,4);
+    gr_1.insert_node(5,5);
+    gr_1.insert_edge({1,2}, 12);
+    gr_1.insert_edge({1,3}, 12);
+    gr_1.insert_edge({1,4}, 14);
+    gr_1.insert_edge({2,1}, 32);
+    gr_1.insert_edge({2,3}, 4);
+    gr_1.insert_edge({2,4}, 4);
+    gr_1.insert_edge({3,1}, 32);
+    gr_1.insert_edge({3,2}, 4);
+    gr_1.insert_edge({3,4}, 4);
+    gr_1.insert_edge({4,1}, 32);
+    gr_1.insert_edge({4,3}, 4);
+    gr_1.insert_edge({4,3}, 4);
+//    print(gr_1);
+
+
+    auto answ = dijkstra(gr_1,2, {1,2,3,5});
+    for (auto it : answ){
+        std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
+        for (auto it_2 : it.second) std::cout  << (it_2) << " ";
+        std::cout << std::endl;
+    }
+}
+
 int main() {
-    new_test_2();
+    new_test_3();
     return 0;
 }
