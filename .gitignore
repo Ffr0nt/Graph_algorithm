@@ -1,3 +1,6 @@
 # Project exclude paths
 /cmake-build-debug/
 /matrix_for_input_1/
+/cmake_install.cmake/
+/CMakeCache.txt/
+/Makefile/
