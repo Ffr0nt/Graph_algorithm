@@ -10,7 +10,7 @@
 
 const char * path_4 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_4"; // nice big matrix
 const char * path_2 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_2"; // 3x4 matrix
-const char * path_1 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_1";
+const char * path_1 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_1"; // for tests of writing and reading
 
 
 void new_test_1(){
@@ -44,90 +44,59 @@ void new_test_1(){
 }
 
 void new_test_2(){
-    try{read_graph<int, int, double>("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_333");
+    try {
+        read_graph<int, int, double>("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_333");
     }
-    catch (std::runtime_error er){std::cout << er.what();}
+    catch (std::runtime_error er) { std::cout << er.what(); }
 
     cout << endl;
 
-    try{read_graph<int, int, double>("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_2");
+    try {
+        read_graph<int, int, double>("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_2");
     }
-    catch (std::runtime_error er){std::cout << er.what();}
+    catch (std::runtime_error er) { std::cout << er.what(); }
 
     cout << endl;
 
-    Graph<int, double, double> gr;
-    gr.insert_node(1,1);
-    gr.insert_node(2,2);
-    gr.insert_edge({1,2}, -1);
-    try{dijkstra(gr, 1,2);}
-    catch (std::runtime_error er){std::cout << er.what();}
+    Graph<int, double, double> g;
+    g.insert_node(1, 1);
+    g.insert_node(2, 2);
+    g.insert_edge({1, 2}, -1);
+    try { dijkstra(g, 1, 2); }
+    catch (std::runtime_error er) { std::cout << er.what(); }
+
+    auto gr = read_graph("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_4");
 
     cout << endl;
+    try { dijkstra(gr, 1, 999); }
+    catch (std::runtime_error er) { std::cout << er.what(); }
 
-    Graph<int, double, double> gr_1;
-    gr_1.insert_node(1,1);
-    gr_1.insert_node(2,2);
-    gr_1.insert_node(3,3);
-    gr_1.insert_node(4,4);
-    gr_1.insert_edge({1,2}, 12);
-    gr_1.insert_edge({1,3}, 12);
-    gr_1.insert_edge({1,4}, 14);
-    gr_1.insert_edge({2,1}, 32);
-    gr_1.insert_edge({2,3}, 4);
-    gr_1.insert_edge({2,4}, 4);
-    gr_1.insert_edge({3,1}, 32);
-    gr_1.insert_edge({3,2}, 4);
-    gr_1.insert_edge({3,4}, 4);
-    gr_1.insert_edge({4,1}, 32);
-    gr_1.insert_edge({4,3}, 4);
-    gr_1.insert_edge({4,3}, 4);
-//    print(gr_1);
+    cout << endl;
+    try { dijkstra(gr, 999, 1); }
+    catch (std::runtime_error er) { std::cout << er.what(); }
 
-    auto answ = dijkstra(gr_1, 1,3);
-    std::cout << "distance: "<< answ.first<< std::endl << "Root: ";
-    for (auto it : answ.second) std::cout  << (it) << " ";
-}
-
-void new_test_3() {
-
-    Graph<int, double, double> gr_1;
-    gr_1.insert_node(1, 1);
-    gr_1.insert_node(2, 2);
-    gr_1.insert_node(3, 3);
-    gr_1.insert_node(4, 4);
-    gr_1.insert_node(5, 5);
-    gr_1.insert_edge({1, 2}, 12);
-    gr_1.insert_edge({1, 3}, 12);
-    gr_1.insert_edge({1, 4}, 14);
-    gr_1.insert_edge({2, 1}, 32);
-    gr_1.insert_edge({2, 3}, 4);
-    gr_1.insert_edge({2, 4}, 4);
-    gr_1.insert_edge({3, 1}, 32);
-    gr_1.insert_edge({3, 2}, 4);
-    gr_1.insert_edge({3, 4}, 4);
-    gr_1.insert_edge({4, 1}, 32);
-    gr_1.insert_edge({4, 3}, 4);
-    gr_1.insert_edge({4, 3}, 4);
+    cout << endl;
 
 }
 
-void new_test_4(){
-    Matrix<double> mat = {{0.0, 2.4, 3.5, 5.0},
-                          {1.2, 0.0, 3.5, 6.8},
-                          {1.2, 2.4, 0.0, 7.4}};
-    std::cout<< std::endl << mat;
+void new_test_3(){
+    Matrix<double> mat = {{0.0, 2.4, 3.5},
+                          {1.2, 0.0, 3.5},
+                          {1.2, 2.4, 0.0}};
+    std::cout<<"Matrix:"<< std::endl << mat;
     Graph<int,int,double> gr_0 = mat;
+
+    std::cout<<"Graph constructed with Matrix:"<< std::endl;
     print(gr_0);
+
+    std::cout<<"Let's write down Matrix in a"<< std::endl << "input_1 file, then read it in graph"<< std::endl;
     BinaryMode<double> BM;
-    BM.write(path_2, mat);
-    auto new_mat = BM.read(path_2);
+    BM.write(path_1, mat);
+    auto new_mat = BM.read(path_1);
     std::cout<< std::endl << new_mat;
     Graph<int,int,double> gr_1 = read_graph<int, int, double>(path_2);
     print(gr_1);
 
-    read_graph<int, int, double>("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_333");
-    return;
 }
 
 void test_switch(size_t num){
@@ -142,7 +111,7 @@ void test_switch(size_t num){
             new_test_3();
             break;
         case (4):
-            new_test_4();
+//            new_test_4();
             break;
         default:
             throw std::runtime_error("Invalid number of test");
