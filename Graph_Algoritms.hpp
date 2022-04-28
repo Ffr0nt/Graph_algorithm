@@ -43,12 +43,13 @@ bool is_not_in(list<std::pair<node_name_t, weight_t> > list,node_name_t key ){
 
 template<typename Key, typename Value, typename Weight>
 Graph<Key, Value, Weight> read_graph(const char *file_name) {
-    BinaryMode<weight_t> BM;
-    matrix_t matrix = BM.read(file_name);
-
     fstream fileStream(file_name);
     if (fileStream.good() == 0)
         throw std::runtime_error("No file by such root.");
+
+    BinaryMode<weight_t> BM;
+    matrix_t matrix = BM.read(file_name);
+
 
     if (matrix.get_rows() != matrix.get_columns())
         throw std::runtime_error("\nThat matrix is not square! \nSizes: " + to_string(matrix.get_rows()) + " x " \
