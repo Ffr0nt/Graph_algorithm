@@ -94,7 +94,7 @@ void new_test_3(){
     BM.write(path_1, mat);
     auto new_mat = BM.read(path_1);
     std::cout<< std::endl << new_mat;
-    Graph<int,int,double> gr_1 = read_graph<int, int, double>(path_2);
+    Graph<int,int,double> gr_1 = read_graph<int, int, double>(path_1);
     print(gr_1);
 
 }
@@ -110,18 +110,18 @@ void test_switch(size_t num){
         case (3):
             new_test_3();
             break;
-        case (4):
-//            new_test_4();
-            break;
+//        case (4):
+//           new_test_4();
+//            break;
         default:
             throw std::runtime_error("Invalid number of test");
     }
 }
 
-int main(int arg_count_0, char* arg_vars_0[]) {
+int main(int arg_count, char* arg_vars[]) {
 
-    int arg_count =3;
-    char* arg_vars[] = {"name","-test","2"};
+//    int arg_count =3;
+//    char* arg_vars[] = {"name","-test","2"};
 
 //    int arg_count =7;
 //    char* arg_vars[] = {"name","-file","/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_4",\
@@ -133,11 +133,14 @@ int main(int arg_count_0, char* arg_vars_0[]) {
     {
         case (3):
             oss << arg_vars[1];
-            if (oss.str() == "-test"){
+            if (oss.str() == "-test")
+            {
                 oss.str("");
                 oss << arg_vars[2];
-                if (atoi( oss.str().c_str() ) > 0 )
+                if ( atoi( oss.str().c_str() ) > 0 ){
+                    cout << atoi( oss.str().c_str() ) << endl;
                     test_switch(atoi( oss.str().c_str() ));
+                }
             }
             break;
 
