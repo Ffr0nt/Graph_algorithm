@@ -3,16 +3,23 @@
 #include <Matrix.h>
 #include "Graph_Algoritms.h"
 
+// +
+// graph( matrix )
 // dijkstra() - now const
 // dijkstra() - can save your values of nodes
 // optimization if there are only inf.-far points left
+// dijkstra() for vector
+// dijkstra() for all keys
+// tests
+// shell
+
 
 
 const char * path_4 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_4"; // nice big matrix
 const char * path_2 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_2"; // 3x4 matrix
 const char * path_1 = "/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_1"; // for tests of writing and reading
 
-
+// appropriate running
 void new_test_1(){
 
     auto gr = read_graph(path_4);
@@ -43,6 +50,7 @@ void new_test_1(){
 
 }
 
+// errors
 void new_test_2(){
     try {
         read_graph<int, int, double>("/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_333");
@@ -79,6 +87,7 @@ void new_test_2(){
 
 }
 
+//  writing and reading tests for matrix
 void new_test_3(){
     Matrix<double> mat = {{0.0, 2.4, 3.5},
                           {1.2, 0.0, 3.5},
@@ -99,6 +108,7 @@ void new_test_3(){
 
 }
 
+
 void test_switch(size_t num){
     switch (num) {
         case (1):
@@ -118,19 +128,33 @@ void test_switch(size_t num){
     }
 }
 
+vector< int> get_noes_to(const char * t){
+    string text = t;
+    string temp;
+    int postion = 0;
+    vector< int> answ;
+    while (text.find(",") != string::npos){
+        temp = text[postion, text.find(",")-1];
+        postion = text.find(",");
+        text.erase(0, postion+1);
+        answ.push_back(atoi(temp.c_str()));
+    }
+    answ.push_back(atoi(text.c_str()));
+    return answ;
+};
+
 int main(int arg_count, char* arg_vars[]) {
-
-//    int arg_count =3;
-//    char* arg_vars[] = {"name","-test","2"};
-
-//    int arg_count =7;
-//    char* arg_vars[] = {"name","-file","/Users/fedor/CLionProjects/Graph_algorithm/matrix_for_input_4",\
-//    "-from","1","-to","3"};
 
     string st;
     stringstream oss;
     switch (arg_count)
     {
+//        case (2):
+//            oss << arg_vars[1];
+//            if (oss.str() == "-help"){
+//                std::cout << "Graph_algorithm ";
+//            }
+            break;
         case (3):
             oss << arg_vars[1];
             if (oss.str() == "-test")
@@ -138,35 +162,74 @@ int main(int arg_count, char* arg_vars[]) {
                 oss.str("");
                 oss << arg_vars[2];
                 if ( atoi( oss.str().c_str() ) > 0 ){
-                    cout << atoi( oss.str().c_str() ) << endl;
                     test_switch(atoi( oss.str().c_str() ));
                 }
             }
             break;
 
+        case (5):
+            if ( strcmp (arg_vars[1], "-file") == 0 ) {
+                const char *path_to_file = arg_vars[2];
+
+                if ( strcmp(arg_vars[3] , "-from") == 0 ) {
+                    int node_from = atoi(arg_vars[4]);
+
+                    if (node_from > 0) {
+                        auto answ = dijkstra(read_graph(path_to_file),node_from);
+                        for (auto it : answ){
+                            std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
+                            for (auto it_2 : it.second) std::cout  << (it_2) << " ";
+                            std::cout << std::endl;
+                        }
+                    }
+                }
+            }
+            break;
+
         case (7):
-            if (arg_vars[1] == "-file") {
+
+            if ( strcmp(arg_vars[1] ,"-file") ==0) {
 
                 const char * path_to_file = arg_vars[2];
 
-                if (arg_vars[3] == "-from") {
+                if (strcmp(arg_vars[3],"-from") ==0) {
                     int node_from = atoi(arg_vars[4]);
-                    if (arg_vars[5] == "-to") {
-                        int node_to = atoi(arg_vars[6]);
 
-                        auto [w, r] = dijkstra(read_graph(path_to_file),node_from,node_to);
-                        std::cout << "distance: "<< w << std::endl << "Root: ";
-                        for (auto it : r) std::cout  << (it) << " ";
+                    if (strcmp(arg_vars[5], "-to") == 0) {
+
+                         vector<int> nodes_to = get_noes_to( arg_vars[6] );
+
+                        auto answ = dijkstra(read_graph(path_to_file),node_from,nodes_to);
+                        for (auto it : answ){
+                            std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
+                            for (auto it_2 : it.second) std::cout  << (it_2) << " ";
+                            std::cout << std::endl;
+                        }
+                    }
+                }
+
+                if (strcmp(arg_vars[3],"-to")==0) {
+                    vector<int> nodes_to = get_noes_to( arg_vars[4] );
+                    if (strcmp(arg_vars[5], "-from") == 0) {
+                        int node_from = atoi(arg_vars[6]);
+
+                        auto answ = dijkstra(read_graph(path_to_file),node_from,nodes_to);
+                        for (auto it : answ){
+                            std::cout << std::endl<< "distance: "<< it.first<< std::endl << "Root: ";
+                            for (auto it_2 : it.second) std::cout  << (it_2) << " ";
+                            std::cout << std::endl;
+                        }
                     }
                 }
             }
             break;
 
         default:
+
             throw std::runtime_error("Invalid arguments");
     }
 
-    cout <<endl<<endl<< "Enter whatever to continue:";
+    cout <<endl<< "Enter whatever to continue:";
     int a;
     cin >> a;
     return 0;

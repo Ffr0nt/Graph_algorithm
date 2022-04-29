@@ -153,7 +153,7 @@ std::pair<weight_t, route_t> dijkstra(const graph_t &graph, const node_name_t &k
 // if there is no way adds a pair of -1 weight and vector with key_to to answer
 // return answer - vector with all pairs
 std::vector<std::pair<weight_t, route_t> >
-dijkstra(const graph_t &graph, const node_name_t &key_from, const  vector<const node_name_t> &end_vec) {
+dijkstra(const graph_t &graph, const node_name_t &key_from, const  vector< node_name_t> &end_vec) {
     for (auto&[node_key, node]: graph) {
         for (auto&[edge_key, edge]: node) {
             if (edge < 0)
